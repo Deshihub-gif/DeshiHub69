@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeshiHub69 - Video Hub</title>
+  <title>DeshiHub69 - Course Hub</title>
   
   <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -13,47 +13,97 @@
 
   <style>
     body { font-family: Arial, sans-serif; background: #121212; color: white; margin: 0; padding: 15px; }
-    h2 { text-align: center; margin-bottom: 20px; }
-    .grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-    .card { background: #1e1e1e; border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #333; }
-    .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; }
+    h2 { text-align: center; margin-bottom: 20px; color: #f1f1f1; }
+    
+    .card { background: #1e1e1e; border-radius: 12px; padding: 15px; border: 1px solid #333; margin-bottom: 20px; }
+    .card img.thumb { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; }
     .card h3 { margin: 10px 0 5px 0; font-size: 18px; }
-    .btn { background: #e50914; color: white; border: none; padding: 10px 15px; margin-top: 10px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 15px; font-weight: bold; }
-    .btn.unlocked { background: #28a745; }
+    
+    .btn { background: #e50914; color: white; border: none; padding: 12px; margin-top: 10px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 15px; font-weight: bold; }
+    
+    /* Inside Content Section (Initially Hidden) */
+    .unlocked-content { display: none; margin-top: 15px; border-top: 1px solid #333; padding-top: 15px; }
+    
+    .video-item { background: #2a2a2a; padding: 10px; margin-bottom: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .video-item a { color: #fff; text-decoration: none; font-weight: bold; background: #28a745; padding: 6px 12px; border-radius: 4px; font-size: 13px; }
+    
+    .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+    .gallery img { width: 100%; height: 90px; object-fit: cover; border-radius: 6px; }
+    
+    .section-title { font-size: 13px; color: #aaa; margin: 10px 0 5px 0; font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <h2>Exclusive Videos</h2>
+  <h2>Pro Course Videos</h2>
 
-  <div class="grid">
-    <!-- Video 1 -->
-    <div class="card">
-      <img src="https://picsum.photos/300/180?random=1" alt="Thumbnail">
-      <h3>Video 1: First Video Title</h3>
-      <button id="btn-1" class="btn" onclick="handleWatch('1', 'https://t.me/Deshi_Hub69/2?single')">
-        🔒 Watch Ad to Unlock (0/2)
-      </button>
-    </div>
+  <!-- CARD 1: VIDEO 1 BUNDLE -->
+  <div class="card">
+    <img src="https://picsum.photos/400/200?random=1" class="thumb" alt="Thumbnail">
+    <h3>Video 1: Course Part 1 Bundle</h3>
+    
+    <button id="btn-1" class="btn" onclick="watchAd('1')">
+      🔒 Watch Ad to Unlock (0/2)
+    </button>
 
-    <!-- Video 2 -->
-    <div class="card">
-      <img src="https://picsum.photos/300/180?random=2" alt="Thumbnail">
-      <h3>Video 2: Second Video Title</h3>
-      <button id="btn-2" class="btn" onclick="handleWatch('2', 'https://www.youtube.com')">
-        🔒 Watch Ad to Unlock (0/2)
-      </button>
+    <!-- Content inside Video 1 -->
+    <div id="content-1" class="unlocked-content">
+      <div class="section-title">📺 PART 1 VIDEOS:</div>
+      <div class="video-item">
+        <span>🎬 Video 1.1 Intro</span>
+        <a href="javascript:void(0)" onclick="openLink('https://t.me/Deshi_Hub69/2?single')">Watch</a>
+      </div>
+      <div class="video-item">
+        <span>🎬 Video 1.2 Main Class</span>
+        <a href="javascript:void(0)" onclick="openLink('https://t.me/Deshi_Hub69/4?single')">Watch</a>
+      </div>
+
+      <div class="section-title">📸 PART 1 IMAGES:</div>
+      <div class="gallery">
+        <img src="https://picsum.photos/200/200?random=10" alt="Pic 1">
+        <img src="https://picsum.photos/200/200?random=11" alt="Pic 2">
+      </div>
     </div>
   </div>
+
+
+  <!-- CARD 2: VIDEO 2 BUNDLE -->
+  <div class="card">
+    <img src="https://picsum.photos/400/200?random=2" class="thumb" alt="Thumbnail">
+    <h3>Video 2: Course Part 2 Bundle</h3>
+    
+    <button id="btn-2" class="btn" onclick="watchAd('2')">
+      🔒 Watch Ad to Unlock (0/2)
+    </button>
+
+    <!-- Content inside Video 2 -->
+    <div id="content-2" class="unlocked-content">
+      <div class="section-title">📺 PART 2 VIDEOS:</div>
+      <div class="video-item">
+        <span>🎬 Video 2.1 Advanced Setup</span>
+        <a href="javascript:void(0)" onclick="openLink('https://t.me/Deshi_Hub69/3?single')">Watch</a>
+      </div>
+      <div class="video-item">
+        <span>🎬 Video 2.2 Final Guide</span>
+        <a href="javascript:void(0)" onclick="openLink('https://t.me/your_channel/4')">Watch</a>
+      </div>
+
+      <div class="section-title">📸 PART 2 IMAGES:</div>
+      <div class="gallery">
+        <img src="https://picsum.photos/200/200?random=12" alt="Pic 3">
+        <img src="https://picsum.photos/200/200?random=13" alt="Pic 4">
+      </div>
+    </div>
+  </div>
+
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // Adsgram Controller Initialization
     const AdController = window.Adsgram.init({ blockId: "52332" });
 
-    // Track ad views count for each video
+    // Track ad progress separately for each card
     const adProgress = {
       '1': 0,
       '2': 0
@@ -61,27 +111,26 @@
 
     const REQUIRED_ADS = 2;
 
-    function handleWatch(videoId, videoUrl) {
-      if (adProgress[videoId] >= REQUIRED_ADS) {
-        tg.openLink(videoUrl);
-        return;
-      }
+    function watchAd(cardId) {
+      if (adProgress[cardId] >= REQUIRED_ADS) return;
 
-      // Show Adsgram Rewarded Video
       AdController.show().then((result) => {
-        adProgress[videoId]++;
-        const btn = document.getElementById(`btn-${videoId}`);
+        adProgress[cardId]++;
+        const btn = document.getElementById(`btn-${cardId}`);
 
-        if (adProgress[videoId] >= REQUIRED_ADS) {
-          btn.innerText = "▶ Watch Video Now";
-          btn.classList.add("unlocked");
-          tg.openLink(videoUrl);
+        if (adProgress[cardId] >= REQUIRED_ADS) {
+          btn.style.display = 'none'; // Hide unlock button
+          document.getElementById(`content-${cardId}`).style.display = 'block'; // Show specific folder content
         } else {
-          btn.innerText = `🔒 Watch Ad (${adProgress[videoId]}/${REQUIRED_ADS})`;
+          btn.innerText = `🔒 Watch Ad (${adProgress[cardId]}/${REQUIRED_ADS})`;
         }
       }).catch((result) => {
-        alert("অ্যাড দেখা কমপ্লিট হয়নি! ভিডিও আনলক করতে অ্যাডটি পুরো দেখুন");
+        alert("Ad pura dekhun content unlock korar jonno!");
       });
+    }
+
+    function openLink(url) {
+      tg.openLink(url);
     }
   </script>
 </body>
