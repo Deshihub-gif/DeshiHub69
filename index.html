@@ -3,31 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video App</title>
+  <title>DeshiHub69 - Course App</title>
+  
+  <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  
+  <!-- Adsgram SDK -->
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
   <style>
     body { font-family: Arial, sans-serif; background: #121212; color: white; margin: 0; padding: 15px; }
-    h2 { text-align: center; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .card { background: #1e1e1e; border-radius: 10px; padding: 10px; text-align: center; }
-    .card img { width: 100%; border-radius: 8px; }
-    .lock-btn { background: #e50914; color: white; border: none; padding: 8px 12px; margin-top: 8px; border-radius: 5px; cursor: pointer; width: 100%; }
+    h2 { text-align: center; margin-bottom: 20px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+    .card { background: #1e1e1e; border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #333; }
+    .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; }
+    .card h3 { margin: 10px 0 5px 0; font-size: 18px; }
+    .btn { background: #e50914; color: white; border: none; padding: 10px 15px; margin-top: 10px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 15px; font-weight: bold; }
+    .btn.unlocked { background: #28a745; }
   </style>
 </head>
 <body>
 
   <h2>Pro Course Videos</h2>
-  
+
   <div class="grid">
+    <!-- Class 1 -->
     <div class="card">
-      <img src="https://via.placeholder.com/150" alt="Thumbnail">
-      <p>Class 1: Intro</p>
-      <button class="lock-btn" onclick="watchAd()">🔒 Watch Ad (0/2)</button>
+      <img src="https://via.placeholder.com/300x180?text=Class+1" alt="Thumbnail">
+      <h3>Class 1: Intro to Course</h3>
+      <button id="btn-1" class="btn" onclick="handleWatch('1', 'https://www.youtube.com')">
+        🔒 Watch Ad to Unlock (0/2)
+      </button>
     </div>
+
+    <!-- Class 2 -->
     <div class="card">
-      <img src="https://via.placeholder.com/150" alt="Thumbnail">
-      <p>Class 2: Setup</p>
-      <button class="lock-btn" onclick="watchAd()">🔒 Watch Ad (0/2)</button>
+      <img src="https://via.placeholder.com/300x180?text=Class+2" alt="Thumbnail">
+      <h3>Class 2: Full Setup Guide</h3>
+      <button id="btn-2" class="btn" onclick="handleWatch('2', 'https://www.youtube.com')">
+        🔒 Watch Ad to Unlock (0/2)
+      </button>
     </div>
   </div>
 
@@ -35,8 +50,41 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    function watchAd() {
-      alert("Ad dekhano hocche... (Ad Network set korar por ad show korbe)");
+    // Adsgram Controller Initialization
+    const AdController = window.Adsgram.init({ blockId: "52332" });
+
+    // Track ad views count for each class
+    const adProgress = {
+      '1': 0,
+      '2': 0
+    };
+
+    const REQUIRED_ADS = 2;
+
+    function handleWatch(classId, videoUrl) {
+      if (adProgress[classId] >= REQUIRED_ADS) {
+        // Already unlocked, open video link directly
+        tg.openLink(videoUrl);
+        return;
+      }
+
+      // Show Adsgram Rewarded Video
+      AdController.show().then((result) => {
+        // Ad watched successfully
+        adProgress[classId]++;
+        const btn = document.getElementById(`btn-${classId}`);
+
+        if (adProgress[classId] >= REQUIRED_ADS) {
+          btn.innerText = "▶ Watch Video Now";
+          btn.classList.add("unlocked");
+          tg.openLink(videoUrl);
+        } else {
+          btn.innerText = `🔒 Watch Ad (${adProgress[classId]}/${REQUIRED_ADS})`;
+        }
+      }).catch((result) => {
+        // Ad failed or skipped by user
+        alert("Ad dekha complete hoyni! Video unlock korte ad-ta puro dekhun.");
+      });
     }
   </script>
 </body>
