@@ -7,9 +7,9 @@
   
   <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  
-  <!-- Adsgram SDK -->
-  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
+  <!-- Monetag SDK (Zone ID: 11971404) -->
+  <script src='//feituoche.com/1?z=11971404' data-zone='11971404' data-sdk='show_11971404'></script>
 
   <style>
     body { font-family: Arial, sans-serif; background: #121212; color: white; margin: 0; padding: 15px; }
@@ -100,14 +100,6 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // EKHANE APNAR NOTUN ADSGRAM BLOCK ID-TI QUOTE-ER BHETOR BOSHABEN
-    const CURRENT_BLOCK_ID = "49581"; 
-
-    let AdController = null;
-    if (window.Adsgram && CURRENT_BLOCK_ID) {
-      AdController = window.Adsgram.init({ blockId: CURRENT_BLOCK_ID });
-    }
-
     const adProgress = {
       '1': 0,
       '2': 0
@@ -118,24 +110,24 @@
     function watchAd(cardId) {
       if (adProgress[cardId] >= REQUIRED_ADS) return;
 
-      if (!AdController) {
-        alert("49581");
-        return;
+      // Monetag Rewarded Popup function call
+      if (typeof show_11971404 === 'function') {
+        show_11971404('pop').then(() => {
+          adProgress[cardId]++;
+          const btn = document.getElementById(`btn-${cardId}`);
+
+          if (adProgress[cardId] >= REQUIRED_ADS) {
+            btn.style.display = 'none';
+            document.getElementById(`content-${cardId}`).style.display = 'block';
+          } else {
+            btn.innerText = `🔒 Watch Ad (${adProgress[cardId]}/${REQUIRED_ADS})`;
+          }
+        }).catch((err) => {
+          alert("অ্যাড দেখা কমপ্লিট হয়নি! ভিডিও আনলক করতে অ্যাডটি পুরো দেখুন।");
+        });
+      } else {
+        alert("Ad SDK লোড হচ্ছে, ১-২ সেকেন্ড পর আবার ট্রাই করুন!");
       }
-
-      AdController.show().then((result) => {
-        adProgress[cardId]++;
-        const btn = document.getElementById(`btn-${cardId}`);
-
-        if (adProgress[cardId] >= REQUIRED_ADS) {
-          btn.style.display = 'none';
-          document.getElementById(`content-${cardId}`).style.display = 'block';
-        } else {
-          btn.innerText = `🔒 Watch Ad (${adProgress[cardId]}/${REQUIRED_ADS})`;
-        }
-      }).catch((result) => {
-        alert("অ্যাড দেখা কমপ্লিট হয়নি! ভিডিও আনলক করতে অ্যাডটি পুরো দেখুন");
-      });
     }
 
     function openLink(url) {
