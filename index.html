@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="bn">
+<!DOCTYPE html>
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +10,8 @@
   <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Monetag SDK (Zone ID: 11971404) -->
-  <script src='//feituoche.com/1?z=11971404' data-zone='11971404' data-sdk='show_11971404'></script>
+  <!-- Monetag SDK -->
+  <script src="//feituoche.com/1?z=11971404" data-zone="11971404" data-sdk="show_11971404"></script>
 
   <style>
     body { font-family: Arial, sans-serif; background: #121212; color: white; margin: 0; padding: 15px; }
@@ -21,7 +23,6 @@
     
     .btn { background: #e50914; color: white; border: none; padding: 12px; margin-top: 10px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 15px; font-weight: bold; }
     
-    /* Inside Content Section (Initially Hidden) */
     .unlocked-content { display: none; margin-top: 15px; border-top: 1px solid #333; padding-top: 15px; }
     
     .video-item { background: #2a2a2a; padding: 10px; margin-bottom: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
@@ -46,7 +47,6 @@
       🔒 Watch Ad to Unlock (0/2)
     </button>
 
-    <!-- Content inside Video 1 -->
     <div id="content-1" class="unlocked-content">
       <div class="section-title">📺 PART 1 VIDEOS:</div>
       <div class="video-item">
@@ -66,7 +66,6 @@
     </div>
   </div>
 
-
   <!-- CARD 2: VIDEO 2 BUNDLE -->
   <div class="card">
     <img src="https://picsum.photos/400/200?random=2" class="thumb" alt="Thumbnail">
@@ -76,7 +75,6 @@
       🔒 Watch Ad to Unlock (0/2)
     </button>
 
-    <!-- Content inside Video 2 -->
     <div id="content-2" class="unlocked-content">
       <div class="section-title">📺 PART 2 VIDEOS:</div>
       <div class="video-item">
@@ -110,23 +108,28 @@
     function watchAd(cardId) {
       if (adProgress[cardId] >= REQUIRED_ADS) return;
 
-      // Monetag Rewarded Popup function call
-      if (typeof show_11971404 === 'function') {
-        show_11971404('pop').then(() => {
-          adProgress[cardId]++;
-          const btn = document.getElementById(`btn-${cardId}`);
+      const adFunction = window.show_11971404 || (typeof show_11971404 === 'function' ? show_11971404 : null);
 
-          if (adProgress[cardId] >= REQUIRED_ADS) {
-            btn.style.display = 'none';
-            document.getElementById(`content-${cardId}`).style.display = 'block';
-          } else {
-            btn.innerText = `🔒 Watch Ad (${adProgress[cardId]}/${REQUIRED_ADS})`;
-          }
-        }).catch((err) => {
-          alert("অ্যাড দেখা কমপ্লিট হয়নি! ভিডিও আনলক করতে অ্যাডটি পুরো দেখুন।");
-        });
+      if (adFunction) {
+        try {
+          adFunction('pop').then(() => {
+            adProgress[cardId]++;
+            const btn = document.getElementById(`btn-${cardId}`);
+
+            if (adProgress[cardId] >= REQUIRED_ADS) {
+              btn.style.display = 'none';
+              document.getElementById(`content-${cardId}`).style.display = 'block';
+            } else {
+              btn.innerText = `🔒 Watch Ad (${adProgress[cardId]}/${REQUIRED_ADS})`;
+            }
+          }).catch((err) => {
+            alert("অ্যাড দেখা কমপ্লিট হয়নি! ভিডিও আনলক করতে অ্যাডটি পুরো দেখুন।");
+          });
+        } catch (e) {
+          alert("Ad System Busy. Please try again!");
+        }
       } else {
-        alert("Ad SDK লোড হচ্ছে, ১-২ সেকেন্ড পর আবার ট্রাই করুন!");
+        alert("Ad Blocked or Not Ready! Please turn off AdBlocker and retry.");
       }
     }
 
