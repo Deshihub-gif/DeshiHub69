@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="bn">
-<!DOCTYPE html>
-<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +7,6 @@
   
   <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <!-- Monetag SDK -->
-  <script src="//feituoche.com/1?z=11971404" data-zone="11971404" data-sdk="show_11971404"></script>
 
   <style>
     body { font-family: Arial, sans-serif; background: #121212; color: white; margin: 0; padding: 15px; }
@@ -98,6 +93,9 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
+    // MONETAG DIRECT LINK
+    const MONETAG_DIRECT_LINK = "https://uplcm.com/4/11971532";
+
     const adProgress = {
       '1': 0,
       '2': 0
@@ -108,28 +106,18 @@
     function watchAd(cardId) {
       if (adProgress[cardId] >= REQUIRED_ADS) return;
 
-      const adFunction = window.show_11971404 || (typeof show_11971404 === 'function' ? show_11971404 : null);
+      // Open Monetag Ad Direct Link
+      tg.openLink(MONETAG_DIRECT_LINK);
 
-      if (adFunction) {
-        try {
-          adFunction('pop').then(() => {
-            adProgress[cardId]++;
-            const btn = document.getElementById(`btn-${cardId}`);
+      // Increment ad progress
+      adProgress[cardId]++;
+      const btn = document.getElementById(`btn-${cardId}`);
 
-            if (adProgress[cardId] >= REQUIRED_ADS) {
-              btn.style.display = 'none';
-              document.getElementById(`content-${cardId}`).style.display = 'block';
-            } else {
-              btn.innerText = `🔒 Watch Ad (${adProgress[cardId]}/${REQUIRED_ADS})`;
-            }
-          }).catch((err) => {
-            alert("অ্যাড দেখা কমপ্লিট হয়নি! ভিডিও আনলক করতে অ্যাডটি পুরো দেখুন।");
-          });
-        } catch (e) {
-          alert("Ad System Busy. Please try again!");
-        }
+      if (adProgress[cardId] >= REQUIRED_ADS) {
+        btn.style.display = 'none';
+        document.getElementById(`content-${cardId}`).style.display = 'block';
       } else {
-        alert("Ad Blocked or Not Ready! Please turn off AdBlocker and retry.");
+        btn.innerText = `🔒 Watch Ad (${adProgress[cardId]}/${REQUIRED_ADS})`;
       }
     }
 
