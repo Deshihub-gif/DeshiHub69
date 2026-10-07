@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeshiHub69 - Course Hub</title>
+  <title>DeshiHub69 - Video Hub</title>
   
   <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -30,28 +30,26 @@
 
     .section-label { font-size: 14px; font-weight: bold; color: #a2a8ba; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
 
-    /* 2-Column Video Grid */
+    /* 2-Column Grid */
     .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     
-    .video-card { background: #181a20; border-radius: 14px; overflow: hidden; border: 1px solid #232633; cursor: pointer; display: flex; flex-direction: column; position: relative; }
+    .video-card { background: #181a20; border-radius: 14px; overflow: hidden; border: 1px solid #232633; display: flex; flex-direction: column; position: relative; }
     
-    .thumb-wrapper { position: relative; width: 100%; padding-top: 100%; background: #232633; }
+    .thumb-wrapper { position: relative; width: 100%; padding-top: 100%; background: #232633; cursor: pointer; }
     .thumb-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
     
-    /* Lock Badge on Thumbnail */
+    /* Lock / Unlock Badges */
     .lock-icon { position: absolute; top: 8px; right: 8px; background: #e53e3e; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
     .unlocked-badge { position: absolute; top: 8px; right: 8px; background: #28a745; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; display: none; }
 
-    .card-info { padding: 10px; }
-    .card-title { font-size: 13px; font-weight: 600; color: #e2e8f0; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-info { padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+    .card-title { font-size: 13px; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     
-    .card-stats { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #718096; }
+    .card-stats { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #718096; }
     .ad-badge { background: #252836; padding: 2px 6px; border-radius: 4px; border: 1px solid #32374a; color: #a0aec0; }
 
-    /* Unlocked Content Drawer */
-    .unlocked-content { display: none; grid-column: 1 / -1; background: #181a20; border: 1px solid #6c5ce7; border-radius: 12px; padding: 12px; margin-top: 5px; }
-    .video-item { background: #232633; padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 13px; }
-    .video-item a { color: #fff; text-decoration: none; font-weight: bold; background: #28a745; padding: 4px 10px; border-radius: 4px; font-size: 12px; }
+    /* Inside Watch Video Button */
+    .watch-btn { display: none; margin-top: 6px; width: 100%; background: #28a745; color: white; border: none; padding: 8px 0; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; }
   </style>
 </head>
 <body>
@@ -78,99 +76,82 @@
 
   <div class="section-label">🕒 Newest Videos</div>
 
-  <!-- 2-Column Grid -->
-  <div class="video-grid">
-    
-    <!-- CARD 1 -->
-    <div class="video-card" onclick="watchAd('1')">
-      <div class="thumb-wrapper">
-        <!-- Apnar Thumbnail Link Ekhane Diben -->
-        <img src="https://picsum.photos/300/300?random=1" alt="Thumb 1">
-        <div id="lock-1" class="lock-icon">🔒</div>
-        <div id="unlock-1" class="unlocked-badge">✓</div>
-      </div>
-      <div class="card-info">
-        <div class="card-title">Course Part 1 Bundle</div>
-        <div class="card-stats">
-          <span>👁 799</span>
-          <span id="badge-1" class="ad-badge">📺 0/2</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- CARD 2 -->
-    <div class="video-card" onclick="watchAd('2')">
-      <div class="thumb-wrapper">
-        <!-- Apnar Thumbnail Link Ekhane Diben -->
-        <img src="https://picsum.photos/300/300?random=2" alt="Thumb 2">
-        <div id="lock-2" class="lock-icon">🔒</div>
-        <div id="unlock-2" class="unlocked-badge">✓</div>
-      </div>
-      <div class="card-info">
-        <div class="card-title">Course Part 2 Bundle</div>
-        <div class="card-stats">
-          <span>👁 639</span>
-          <span id="badge-2" class="ad-badge">📺 0/2</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Content Area for Video 1 -->
-    <div id="content-1" class="unlocked-content">
-      <div style="font-size:12px; color:#aaa; margin-bottom:8px;">📺 PART 1 VIDEOS:</div>
-      <div class="video-item">
-        <span>🎬 Video 1.1 Intro</span>
-        <a href="javascript:void(0)" onclick="openLink('https://t.me/Deshi_Hub69/22')">Watch</a>
-      </div>
-      <div class="video-item">
-        <span>🎬 Video 1.2 Main Class</span>
-        <a href="javascript:void(0)" onclick="openLink('https://t.me/Deshi_Hub69/21')">Watch</a>
-      </div>
-    </div>
-
-    <!-- Content Area for Video 2 -->
-    <div id="content-2" class="unlocked-content">
-      <div style="font-size:12px; color:#aaa; margin-bottom:8px;">📺 PART 2 VIDEOS:</div>
-      <div class="video-item">
-        <span>🎬 Video 2.1 Advanced Setup</span>
-        <a href="javascript:void(0)" onclick="openLink('https://streamable.com/uc30ye')">Watch</a>
-      </div>
-      <div class="video-item">
-        <span>🎬 Video 2.2 Final Guide</span>
-        <a href="javascript:void(0)" onclick="openLink('https://t.me/your_channel/4')">Watch</a>
-      </div>
-    </div>
-
-  </div>
+  <!-- 2-Column Grid Wrapper -->
+  <div class="video-grid" id="grid-container"></div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
     const MONETAG_DIRECT_LINK = "https://uplcm.com/4/11971532";
-
-    const adProgress = {
-      '1': 0,
-      '2': 0
-    };
-
     const REQUIRED_ADS = 2;
 
-    function watchAd(cardId) {
-      if (adProgress[cardId] >= REQUIRED_ADS) return;
+    // 20-ti Video items config (Simple titles)
+    const videos = [
+      { id: 1, title: "Video 1", views: "799", thumb: "https://picsum.photos/300/300?random=1", link: "https://t.me/Deshi_Hub69/22" },
+      { id: 2, title: "Video 2", views: "639", thumb: "https://picsum.photos/300/300?random=2", link: "https://t.me/Deshi_Hub69/21" },
+      { id: 3, title: "Video 3", views: "512", thumb: "https://picsum.photos/300/300?random=3", link: "https://streamable.com/uc30ye" },
+      { id: 4, title: "Video 4", views: "449", thumb: "https://picsum.photos/300/300?random=4", link: "https://t.me/Deshi_Hub69/22" },
+      { id: 5, title: "Video 5", views: "820", thumb: "https://picsum.photos/300/300?random=5", link: "https://t.me/Deshi_Hub69/21" },
+      { id: 6, title: "Video 6", views: "910", thumb: "https://picsum.photos/300/300?random=6", link: "https://streamable.com/uc30ye" },
+      { id: 7, title: "Video 7", views: "340", thumb: "https://picsum.photos/300/300?random=7", link: "https://t.me/Deshi_Hub69/22" },
+      { id: 8, title: "Video 8", views: "715", thumb: "https://picsum.photos/300/300?random=8", link: "https://t.me/Deshi_Hub69/21" },
+      { id: 9, title: "Video 9", views: "628", thumb: "https://picsum.photos/300/300?random=9", link: "https://streamable.com/uc30ye" },
+      { id: 10, title: "Video 10", views: "550", thumb: "https://picsum.photos/300/300?random=10", link: "https://t.me/Deshi_Hub69/22" },
+      { id: 11, title: "Video 11", views: "480", thumb: "https://picsum.photos/300/300?random=11", link: "https://t.me/Deshi_Hub69/21" },
+      { id: 12, title: "Video 12", views: "390", thumb: "https://picsum.photos/300/300?random=12", link: "https://streamable.com/uc30ye" },
+      { id: 13, title: "Video 13", views: "870", thumb: "https://picsum.photos/300/300?random=13", link: "https://t.me/Deshi_Hub69/22" },
+      { id: 14, title: "Video 14", views: "940", thumb: "https://picsum.photos/300/300?random=14", link: "https://t.me/Deshi_Hub69/21" },
+      { id: 15, title: "Video 15", views: "605", thumb: "https://picsum.photos/300/300?random=15", link: "https://streamable.com/uc30ye" },
+      { id: 16, title: "Video 16", views: "730", thumb: "https://picsum.photos/300/300?random=16", link: "https://t.me/Deshi_Hub69/22" },
+      { id: 17, title: "Video 17", views: "510", thumb: "https://picsum.photos/300/300?random=17", link: "https://t.me/Deshi_Hub69/21" },
+      { id: 18, title: "Video 18", views: "680", thumb: "https://picsum.photos/300/300?random=18", link: "https://streamable.com/uc30ye" },
+      { id: 19, title: "Video 19", views: "825", thumb: "https://picsum.photos/300/300?random=19", link: "https://t.me/Deshi_Hub69/22" },
+      { id: 20, title: "Video 20", views: "990", thumb: "https://picsum.photos/300/300?random=20", link: "https://t.me/Deshi_Hub69/21" }
+    ];
+
+    const adProgress = {};
+
+    // Render cards into DOM
+    const container = document.getElementById('grid-container');
+    videos.forEach(item => {
+      adProgress[item.id] = 0;
+
+      const card = document.createElement('div');
+      card.className = 'video-card';
+      card.innerHTML = `
+        <div class="thumb-wrapper" onclick="watchAd(${item.id})">
+          <img src="${item.thumb}" alt="${item.title}">
+          <div id="lock-${item.id}" class="lock-icon">🔒</div>
+          <div id="unlock-${item.id}" class="unlocked-badge">✓</div>
+        </div>
+        <div class="card-info">
+          <div class="card-title">${item.title}</div>
+          <div class="card-stats">
+            <span>👁 ${item.views}</span>
+            <span id="badge-${item.id}" class="ad-badge">📺 0/${REQUIRED_ADS}</span>
+          </div>
+          <a id="btn-${item.id}" href="javascript:void(0)" onclick="openLink('${item.link}')" class="watch-btn">🎬 Watch Video</a>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    function watchAd(id) {
+      if (adProgress[id] >= REQUIRED_ADS) return;
 
       // Open Monetag Ad Link
       tg.openLink(MONETAG_DIRECT_LINK);
 
-      adProgress[cardId]++;
+      adProgress[id]++;
       
-      const badge = document.getElementById(`badge-${cardId}`);
-      badge.innerText = `📺 ${adProgress[cardId]}/${REQUIRED_ADS}`;
+      const badge = document.getElementById(`badge-${id}`);
+      badge.innerText = `📺 ${adProgress[id]}/${REQUIRED_ADS}`;
 
-      if (adProgress[cardId] >= REQUIRED_ADS) {
-        document.getElementById(`lock-${cardId}`).style.display = 'none';
-        document.getElementById(`unlock-${cardId}`).style.display = 'flex';
-        document.getElementById(`content-${cardId}`).style.display = 'block';
+      if (adProgress[id] >= REQUIRED_ADS) {
+        document.getElementById(`lock-${id}`).style.display = 'none';
+        document.getElementById(`unlock-${id}`).style.display = 'flex';
+        document.getElementById(`btn-${id}`).style.display = 'block';
       }
     }
 
