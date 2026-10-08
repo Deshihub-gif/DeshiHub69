@@ -39,8 +39,8 @@
     .thumb-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
     
     /* Lock / Unlock Badges */
-    .lock-icon { position: absolute; top: 8px; right: 8px; background: #e53e3e; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
-    .unlocked-badge { position: absolute; top: 8px; right: 8px; background: #28a745; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; display: none; }
+    .lock-icon { position: absolute; top: 8px; right: 8px; background: #e53e3e; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; z-index: 2; }
+    .unlocked-badge { position: absolute; top: 8px; right: 8px; background: #28a745; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; display: none; z-index: 2; }
 
     .card-info { padding: 10px; display: flex; flex-direction: column; gap: 6px; }
     .card-title { font-size: 13px; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -86,7 +86,6 @@
     const MONETAG_DIRECT_LINK = "https://uplcm.com/4/11971532";
     const REQUIRED_ADS = 2;
 
-    // 20-ti Video items config (Simple titles)
     const videos = [
       { id: 1, title: "Girl showing nude selfy by self recorded", views: "799", thumb: "https://i.postimg.cc/XYypkw5c/kmc-20261008-021441.png", link: "https://playmogo.com/d/1xpxmbqtjm9s" },
       { id: 2, title: "দেশি ঢাকার মাল", views: "639", thumb: "https://i.postimg.cc/W45z2XLC/63-23645.jpg", link: "https://playmogo.com/d/5ihhymy9zb6d" },
@@ -112,7 +111,6 @@
 
     const adProgress = {};
 
-    // Render cards into DOM
     const container = document.getElementById('grid-container');
     videos.forEach(item => {
       adProgress[item.id] = 0;
