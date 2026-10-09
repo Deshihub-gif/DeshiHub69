@@ -50,6 +50,12 @@
 
     /* Inside Watch Video Button */
     .watch-btn { display: none; margin-top: 6px; width: 100%; background: #28a745; color: white; border: none; padding: 8px 0; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; }
+
+    /* In-App Ad Modal Style */
+    .ad-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+    .ad-modal-box { width: 90%; height: 70%; background: #1a1c24; border-radius: 12px; overflow: hidden; border: 1px solid #2e3346; }
+    .timer-badge { margin-top: 15px; background: #222533; padding: 8px 18px; border-radius: 20px; font-size: 14px; color: #00ffcc; border: 1px solid #32374a; }
+    .claim-progress-btn { margin-top: 12px; padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; }
   </style>
 </head>
 <body>
@@ -78,6 +84,19 @@
 
   <!-- 2-Column Grid Wrapper -->
   <div class="video-grid" id="grid-container"></div>
+
+  <!-- In-App Ad Popup Modal -->
+  <div id="adModal" class="ad-modal-overlay">
+    <div class="ad-modal-box">
+      <iframe id="adFrame" src="" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+    <div id="timerBadge" class="timer-badge">
+      Please wait: <span id="seconds">10</span>s
+    </div>
+    <button id="claimBtn" class="claim-progress-btn" onclick="closeAdModal()">
+      Close & Claim Progress
+    </button>
+  </div>
 
   <script>
     const tg = window.Telegram.WebApp;
@@ -110,6 +129,8 @@
     ];
 
     const adProgress = {};
+    let activeAdVideoId = null;
+    let timerInterval = null;
 
     const container = document.getElementById('grid-container');
     videos.forEach(item => {
@@ -138,18 +159,48 @@
     function watchAd(id) {
       if (adProgress[id] >= REQUIRED_ADS) return;
 
-      // Open Monetag Ad Link
-      tg.openLink(MONETAG_DIRECT_LINK);
+      activeAdVideoId = id;
 
-      adProgress[id]++;
-      
-      const badge = document.getElementById(`badge-${id}`);
-      badge.innerText = `📺 ${adProgress[id]}/${REQUIRED_ADS}`;
+      // Modal Open and Ad Load
+      document.getElementById('adModal').style.display = 'flex';
+      document.getElementById('adFrame').src = MONETAG_DIRECT_LINK;
 
-      if (adProgress[id] >= REQUIRED_ADS) {
-        document.getElementById(`lock-${id}`).style.display = 'none';
-        document.getElementById(`unlock-${id}`).style.display = 'flex';
-        document.getElementById(`btn-${id}`).style.display = 'block';
+      // Timer Reset
+      let seconds = 10;
+      document.getElementById('seconds').innerText = seconds;
+      document.getElementById('timerBadge').style.display = 'block';
+      document.getElementById('claimBtn').style.display = 'none';
+
+      if (timerInterval) clearInterval(timerInterval);
+
+      timerInterval = setInterval(() => {
+        seconds--;
+        document.getElementById('seconds').innerText = seconds;
+
+        if (seconds <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById('timerBadge').style.display = 'none';
+          document.getElementById('claimBtn').style.display = 'block';
+        }
+      }, 1000);
+    }
+
+    function closeAdModal() {
+      document.getElementById('adModal').style.display = 'none';
+      document.getElementById('adFrame').src = '';
+
+      const id = activeAdVideoId;
+      if (id && adProgress[id] < REQUIRED_ADS) {
+        adProgress[id]++;
+
+        const badge = document.getElementById(`badge-${id}`);
+        badge.innerText = `📺 ${adProgress[id]}/${REQUIRED_ADS}`;
+
+        if (adProgress[id] >= REQUIRED_ADS) {
+          document.getElementById(`lock-${id}`).style.display = 'none';
+          document.getElementById(`unlock-${id}`).style.display = 'flex';
+          document.getElementById(`btn-${id}`).style.display = 'block';
+        }
       }
     }
 
