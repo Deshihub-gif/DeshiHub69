@@ -52,10 +52,11 @@
     .watch-btn { display: none; margin-top: 6px; width: 100%; background: #28a745; color: white; border: none; padding: 8px 0; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; }
 
     /* In-App Ad Modal Style */
-    .ad-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-    .ad-modal-box { width: 90%; height: 70%; background: #1a1c24; border-radius: 12px; overflow: hidden; border: 1px solid #2e3346; }
-    .timer-badge { margin-top: 15px; background: #222533; padding: 8px 18px; border-radius: 20px; font-size: 14px; color: #00ffcc; border: 1px solid #32374a; }
-    .claim-progress-btn { margin-top: 12px; padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; }
+    .ad-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+    .ad-modal-box { width: 90%; max-width: 340px; background: #1a1c24; border-radius: 16px; padding: 25px 20px; border: 1px solid #2e3346; display: flex; flex-direction: column; align-items: center; gap: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    .ad-icon-anim { font-size: 40px; }
+    .timer-badge { background: #222533; padding: 10px 20px; border-radius: 20px; font-size: 14px; color: #00ffcc; border: 1px solid #32374a; font-weight: 600; }
+    .claim-progress-btn { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; display: none; }
   </style>
 </head>
 <body>
@@ -85,17 +86,19 @@
   <!-- 2-Column Grid Wrapper -->
   <div class="video-grid" id="grid-container"></div>
 
-  <!-- In-App Ad Popup Modal -->
+  <!-- In-App Verification Modal -->
   <div id="adModal" class="ad-modal-overlay">
     <div class="ad-modal-box">
-      <iframe id="adFrame" src="" style="width:100%; height:100%; border:none;"></iframe>
+      <div class="ad-icon-anim">⏳</div>
+      <h3 style="font-size: 16px; color: #fff;">Verifying Ad Impression...</h3>
+      <p style="font-size: 12px; color: #8e94a5;">Ad opened in browser. Please wait for timer verification to unlock progress.</p>
+      <div id="timerBadge" class="timer-badge">
+        Please wait: <span id="seconds">10</span>s
+      </div>
+      <button id="claimBtn" class="claim-progress-btn" onclick="closeAdModal()">
+        ✓ Claim Ad Progress
+      </button>
     </div>
-    <div id="timerBadge" class="timer-badge">
-      Please wait: <span id="seconds">10</span>s
-    </div>
-    <button id="claimBtn" class="claim-progress-btn" onclick="closeAdModal()">
-      Close & Claim Progress
-    </button>
   </div>
 
   <script>
@@ -161,11 +164,12 @@
 
       activeAdVideoId = id;
 
-      // Modal Open and Ad Load
-      document.getElementById('adModal').style.display = 'flex';
-      document.getElementById('adFrame').src = MONETAG_DIRECT_LINK;
+      // 1. Open Monetag Ad Cleanly in External Browser Tab (No Iframe/No Captcha Lock)
+      tg.openLink(MONETAG_DIRECT_LINK);
 
-      // Timer Reset
+      // 2. Show Modal Overlay inside Telegram WebApp with Timer
+      document.getElementById('adModal').style.display = 'flex';
+
       let seconds = 10;
       document.getElementById('seconds').innerText = seconds;
       document.getElementById('timerBadge').style.display = 'block';
@@ -187,7 +191,6 @@
 
     function closeAdModal() {
       document.getElementById('adModal').style.display = 'none';
-      document.getElementById('adFrame').src = '';
 
       const id = activeAdVideoId;
       if (id && adProgress[id] < REQUIRED_ADS) {
