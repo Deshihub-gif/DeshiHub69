@@ -70,15 +70,15 @@
   <!-- Search Input -->
   <div class="search-box">
     <span>🔍</span>
-    <input type="text" placeholder="Search videos...">
+    <input type="text" id="searchInput" placeholder="Search videos..." onkeyup="filterVideos()">
   </div>
 
   <!-- Category Pills -->
-  <div class="categories">
-    <button class="cat-btn active">🔥 All</button>
-    <button class="cat-btn">Blogger Video</button>
-    <button class="cat-btn">Desi new Video</button>
-    <button class="cat-btn">Terabox</button>
+  <div class="categories" id="categoryContainer">
+    <button class="cat-btn active" onclick="setCategory('All', this)">🔥 All</button>
+    <button class="cat-btn" onclick="setCategory('Blogger Video', this)">Blogger Video</button>
+    <button class="cat-btn" onclick="setCategory('Desi new Video', this)">Desi new Video</button>
+    <button class="cat-btn" onclick="setCategory('Terabox', this)">Terabox</button>
   </div>
 
   <div class="section-label">🕒 Newest Videos</div>
@@ -109,62 +109,113 @@
     const REQUIRED_ADS = 2;
 
     const videos = [
-      { id: 1, title: "Girl showing nude selfy by self recorded", views: "799", thumb: "https://i.postimg.cc/XYypkw5c/kmc-20261008-021441.png", link: "https://playmogo.com/d/1xpxmbqtjm9s" },
-      { id: 2, title: "দেশি ঢাকার মাল", views: "639", thumb: "https://i.postimg.cc/W45z2XLC/63-23645.jpg", link: "https://playmogo.com/d/5ihhymy9zb6d" },
-      { id: 3, title: "দেশি ঢাকার মাল পার্ট -২", views: "512", thumb: "https://i.postimg.cc/sxYM7WNy/51-23249.jpg", link: "https://playmogo.com/d/dvswx03tt7th" },
-      { id: 4, title: "দেশি ঢাকার মাল পার্ট -৩", views: "449", thumb: "https://i.postimg.cc/SsZTqXrS/0-85-24209.jpg", link: "https://playmogo.com/d/zlczo0yinf9z" },
-      { id: 5, title: "Pakistani hot beautiful boobs and pussy for her ex boyfriend", views: "820", thumb: "https://i.postimg.cc/RVx2Hkkc/0-2025-10-07-22-47-40.jpg", link: "https://playmogo.com/d/6e2grhwvluy1" },
-      { id: 6, title: "Pakistani hot beautiful boobs and pussy for her ex boyfriend", views: "910", thumb: "https://i.postimg.cc/k5LTd89p/IMG-20261008-133254.jpg", link: "https://playmogo.com/d/bdr2lrulvdjq" },
-      { id: 7, title: "bangladesi student with tution teacher", views: "340", thumb: "https://i.postimg.cc/D0jpWNLc/1-screenshot-0-23.png", link: "https://playmogo.com/d/mwhi2obhhn9d" },
-      { id: 8, title: "Indian beautiful lover girl nude video", views: "715", thumb: "https://i.postimg.cc/VLR0tb7T/0-1000038858.jpg", link: "https://playmogo.com/d/0lrzdy7ywp0w" },
-      { id: 9, title: "Indian beautiful lover girl nude showing her boobs", views: "628", thumb: "https://i.postimg.cc/fyS5LfjY/2-5175154082803551416-121.jpg", link: "https://playmogo.com/d/wen8g544yit4" },
-      { id: 10, title: "Beautiful Sexy nepali asian Horny Gf Hard Fucking", views: "550", thumb: "https://i.postimg.cc/qBLPVbhk/0-d65d0902-f2d2-4261-9b34-cc04e6a5d725.jpg", link: "https://playmogo.com/d/aaok2v0d85ma" },
-      { id: 11, title: "🔥#Indian🔥 🔥#Viral🔥 🔥#Desi🔥 🔥#HotGirl🔥 🔥#Leaked🔥 🔥#BigBoobs", views: "480", thumb: "https://i.postimg.cc/fbQwqNv4/12-1772373799486.jpg", link: "https://playmogo.com/d/hrgbaatgwha0" },
-      { id: 12, title: "indian viral video", views: "390", thumb: "https://i.postimg.cc/WzdLbW7M/25-1772373673174.jpg", link: "https://playmogo.com/d/garhi91m55vn" },
-      { id: 13, title: "Pakistani Hot sexy Girl showing her Boobs and pussy", views: "870", thumb: "https://i.postimg.cc/WpYkSdrt/2-2bgi0ceo.jpg", link: "https://drive.google.com/file/d/1RNp45m1H8MtMoQo-vMpvuoHDvLjJqz79/view?usp=drivesdk" },
-      { id: 14, title: "Video 14", views: "940", thumb: "https://picsum.photos/300/300?random=14", link: "https://t.me/Deshi_Hub69/21" },
-      { id: 15, title: "Video 15", views: "605", thumb: "https://picsum.photos/300/300?random=15", link: "https://streamable.com/uc30ye" },
-      { id: 16, title: "Video 16", views: "730", thumb: "https://picsum.photos/300/300?random=16", link: "https://t.me/Deshi_Hub69/22" },
-      { id: 17, title: "Video 17", views: "510", thumb: "https://picsum.photos/300/300?random=17", link: "https://t.me/Deshi_Hub69/21" },
-      { id: 18, title: "Video 18", views: "680", thumb: "https://picsum.photos/300/300?random=18", link: "https://streamable.com/uc30ye" },
-      { id: 19, title: "Video 19", views: "825", thumb: "https://picsum.photos/300/300?random=19", link: "https://t.me/Deshi_Hub69/22" },
-      { id: 20, title: "Video 20", views: "990", thumb: "https://picsum.photos/300/300?random=20", link: "https://t.me/Deshi_Hub69/21" }
+      { id: 1, title: "Girl showing nude selfy by self recorded", views: "799", category: "Desi new Video", thumb: "https://i.postimg.cc/XYypkw5c/kmc-20261008-021441.png", link: "https://playmogo.com/d/1xpxmbqtjm9s" },
+      { id: 2, title: "দেশি ঢাকার মাল", views: "639", category: "Desi new Video", thumb: "https://i.postimg.cc/W45z2XLC/63-23645.jpg", link: "https://playmogo.com/d/5ihhymy9zb6d" },
+      { id: 3, title: "দেশি ঢাকার মাল পার্ট -২", views: "512", category: "Desi new Video", thumb: "https://i.postimg.cc/sxYM7WNy/51-23249.jpg", link: "https://playmogo.com/d/dvswx03tt7th" },
+      { id: 4, title: "দেশি ঢাকার মাল পার্ট -৩", views: "449", category: "Desi new Video", thumb: "https://i.postimg.cc/SsZTqXrS/0-85-24209.jpg", link: "https://playmogo.com/d/zlczo0yinf9z" },
+      { id: 5, title: "Pakistani hot beautiful boobs", views: "820", category: "Desi new Video", thumb: "https://i.postimg.cc/RVx2Hkkc/0-2025-10-07-22-47-40.jpg", link: "https://playmogo.com/d/6e2grhwvluy1" },
+      { id: 6, title: "Pakistani hot ex boyfriend video", views: "910", category: "Desi new Video", thumb: "https://i.postimg.cc/k5LTd89p/IMG-20261008-133254.jpg", link: "https://playmogo.com/d/bdr2lrulvdjq" },
+      { id: 7, title: "bangladesi student with tution teacher", views: "340", category: "Desi new Video", thumb: "https://i.postimg.cc/D0jpWNLc/1-screenshot-0-23.png", link: "https://playmogo.com/d/mwhi2obhhn9d" },
+      { id: 8, title: "Indian beautiful lover girl nude video", views: "715", category: "Desi new Video", thumb: "https://i.postimg.cc/VLR0tb7T/0-1000038858.jpg", link: "https://playmogo.com/d/0lrzdy7ywp0w" },
+      { id: 9, title: "Indian beautiful lover girl nude boobs", views: "628", category: "Desi new Video", thumb: "https://i.postimg.cc/fyS5LfjY/2-5175154082803551416-121.jpg", link: "https://playmogo.com/d/wen8g544yit4" },
+      { id: 10, title: "Beautiful Sexy nepali asian Horny Gf", views: "550", category: "Desi new Video", thumb: "https://i.postimg.cc/qBLPVbhk/0-d65d0902-f2d2-4261-9b34-cc04e6a5d725.jpg", link: "https://playmogo.com/d/aaok2v0d85ma" },
+      { id: 11, title: "🔥#Indian🔥 Viral Desi HotGirl", views: "480", category: "Blogger Video", thumb: "https://i.postimg.cc/fbQwqNv4/12-1772373799486.jpg", link: "https://playmogo.com/d/hrgbaatgwha0" },
+      { id: 12, title: "indian viral video part 2", views: "390", category: "Blogger Video", thumb: "https://i.postimg.cc/WzdLbW7M/25-1772373673174.jpg", link: "https://playmogo.com/d/garhi91m55vn" },
+      { id: 13, title: "Pakistani Hot sexy Girl Boobs", views: "870", category: "Blogger Video", thumb: "https://i.postimg.cc/WpYkSdrt/2-2bgi0ceo.jpg", link: "https://files.catbox.moe/vnjyai.mp4" },
+      { id: 14, title: "Blogger Exclusive Video 14", views: "940", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=14", link: "https://t.me/Deshi_Hub69/21" },
+      { id: 15, title: "Blogger Exclusive Video 15", views: "605", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=15", link: "https://streamable.com/uc30ye" },
+      { id: 16, title: "Blogger Exclusive Video 16", views: "730", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=16", link: "https://t.me/Deshi_Hub69/22" },
+      { id: 17, title: "Blogger Exclusive Video 17", views: "510", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=17", link: "https://t.me/Deshi_Hub69/21" },
+      { id: 18, title: "Blogger Exclusive Video 18", views: "680", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=18", link: "https://streamable.com/uc30ye" },
+      { id: 19, title: "Blogger Exclusive Video 19", views: "825", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=19", link: "https://t.me/Deshi_Hub69/22" },
+      { id: 20, title: "Blogger Exclusive Video 20", views: "990", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=20", link: "https://t.me/Deshi_Hub69/21" },
+      { id: 21, title: "Terabox Special Cloud Video 21", views: "830", category: "Terabox", thumb: "https://picsum.photos/300/300?random=21", link: "https://terabox.com/s/sample1" },
+      { id: 22, title: "Terabox Special Cloud Video 22", views: "750", category: "Terabox", thumb: "https://picsum.photos/300/300?random=22", link: "https://terabox.com/s/sample2" },
+      { id: 23, title: "Terabox Special Cloud Video 23", views: "912", category: "Terabox", thumb: "https://picsum.photos/300/300?random=23", link: "https://terabox.com/s/sample3" },
+      { id: 24, title: "Terabox Special Cloud Video 24", views: "640", category: "Terabox", thumb: "https://picsum.photos/300/300?random=24", link: "https://terabox.com/s/sample4" },
+      { id: 25, title: "Terabox Special Cloud Video 25", views: "520", category: "Terabox", thumb: "https://picsum.photos/300/300?random=25", link: "https://terabox.com/s/sample5" },
+      { id: 26, title: "Terabox Special Cloud Video 26", views: "780", category: "Terabox", thumb: "https://picsum.photos/300/300?random=26", link: "https://terabox.com/s/sample6" },
+      { id: 27, title: "Terabox Special Cloud Video 27", views: "890", category: "Terabox", thumb: "https://picsum.photos/300/300?random=27", link: "https://terabox.com/s/sample7" },
+      { id: 28, title: "Terabox Special Cloud Video 28", views: "430", category: "Terabox", thumb: "https://picsum.photos/300/300?random=28", link: "https://terabox.com/s/sample8" },
+      { id: 29, title: "Terabox Special Cloud Video 29", views: "615", category: "Terabox", thumb: "https://picsum.photos/300/300?random=29", link: "https://terabox.com/s/sample9" },
+      { id: 30, title: "Terabox Special Cloud Video 30", views: "950", category: "Terabox", thumb: "https://picsum.photos/300/300?random=30", link: "https://terabox.com/s/sample10" },
+      { id: 31, title: "Desi Viral Hub Video 31", views: "530", category: "Desi new Video", thumb: "https://picsum.photos/300/300?random=31", link: "https://playmogo.com/d/sample31" },
+      { id: 32, title: "Desi Viral Hub Video 32", views: "710", category: "Desi new Video", thumb: "https://picsum.photos/300/300?random=32", link: "https://playmogo.com/d/sample32" },
+      { id: 33, title: "Blogger Special Clip 33", views: "840", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=33", link: "https://t.me/Deshi_Hub69/21" },
+      { id: 34, title: "Blogger Special Clip 34", views: "690", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=34", link: "https://t.me/Deshi_Hub69/22" },
+      { id: 35, title: "Terabox HD Video 35", views: "925", category: "Terabox", thumb: "https://picsum.photos/300/300?random=35", link: "https://terabox.com/s/sample35" },
+      { id: 36, title: "Terabox HD Video 36", views: "480", category: "Terabox", thumb: "https://picsum.photos/300/300?random=36", link: "https://terabox.com/s/sample36" },
+      { id: 37, title: "Desi Hot Romance 37", views: "770", category: "Desi new Video", thumb: "https://picsum.photos/300/300?random=37", link: "https://playmogo.com/d/sample37" },
+      { id: 38, title: "Desi Hot Romance 38", views: "880", category: "Desi new Video", thumb: "https://picsum.photos/300/300?random=38", link: "https://playmogo.com/d/sample38" },
+      { id: 39, title: "Blogger Exclusive 39", views: "630", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=39", link: "https://t.me/Deshi_Hub69/21" },
+      { id: 40, title: "Blogger Exclusive 40", views: "995", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=40", link: "https://t.me/Deshi_Hub69/22" }
     ];
 
     const adProgress = {};
     let activeAdVideoId = null;
     let timerInterval = null;
+    let currentCategory = 'All';
 
-    const container = document.getElementById('grid-container');
-    videos.forEach(item => {
-      adProgress[item.id] = 0;
+    function renderVideos(filteredList) {
+      const container = document.getElementById('grid-container');
+      container.innerHTML = '';
 
-      const card = document.createElement('div');
-      card.className = 'video-card';
-      card.innerHTML = `
-        <div class="thumb-wrapper" onclick="watchAd(${item.id})">
-          <img src="${item.thumb}" alt="${item.title}">
-          <div id="lock-${item.id}" class="lock-icon">🔒</div>
-          <div id="unlock-${item.id}" class="unlocked-badge">✓</div>
-        </div>
-        <div class="card-info">
-          <div class="card-title">${item.title}</div>
-          <div class="card-stats">
-            <span>👁 ${item.views}</span>
-            <span id="badge-${item.id}" class="ad-badge">📺 0/${REQUIRED_ADS}</span>
+      filteredList.forEach(item => {
+        if (adProgress[item.id] === undefined) {
+          adProgress[item.id] = 0;
+        }
+        const progress = adProgress[item.id];
+        const isUnlocked = progress >= REQUIRED_ADS;
+
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.innerHTML = `
+          <div class="thumb-wrapper" onclick="watchAd(${item.id})">
+            <img src="${item.thumb}" alt="${item.title}">
+            <div id="lock-${item.id}" class="lock-icon" style="display: ${isUnlocked ? 'none' : 'flex'};">🔒</div>
+            <div id="unlock-${item.id}" class="unlocked-badge" style="display: ${isUnlocked ? 'flex' : 'none'};">✓</div>
           </div>
-          <a id="btn-${item.id}" href="javascript:void(0)" onclick="openLink('${item.link}')" class="watch-btn">🎬 Watch Video</a>
-        </div>
-      `;
-      container.appendChild(card);
-    });
+          <div class="card-info">
+            <div class="card-title">${item.title}</div>
+            <div class="card-stats">
+              <span>👁 ${item.views}</span>
+              <span id="badge-${item.id}" class="ad-badge">📺 ${progress}/${REQUIRED_ADS}</span>
+            </div>
+            <a id="btn-${item.id}" href="javascript:void(0)" onclick="openLink('${item.link}')" class="watch-btn" style="display: ${isUnlocked ? 'block' : 'none'};">🎬 Watch Video</a>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function setCategory(category, btnElement) {
+      currentCategory = category;
+      
+      // Update active button style
+      document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+
+      filterVideos();
+    }
+
+    function filterVideos() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      
+      const filtered = videos.filter(item => {
+        const matchesCategory = (currentCategory === 'All') || (item.category === currentCategory);
+        const matchesSearch = item.title.toLowerCase().includes(query);
+        return matchesCategory && matchesSearch;
+      });
+
+      renderVideos(filtered);
+    }
 
     function watchAd(id) {
       if (adProgress[id] >= REQUIRED_ADS) return;
 
       activeAdVideoId = id;
 
-      // 1. Open Monetag Ad Cleanly in External Browser Tab (No Iframe/No Captcha Lock)
+      // 1. Open Monetag Ad Cleanly in External Browser Tab
       tg.openLink(MONETAG_DIRECT_LINK);
 
       // 2. Show Modal Overlay inside Telegram WebApp with Timer
@@ -197,12 +248,16 @@
         adProgress[id]++;
 
         const badge = document.getElementById(`badge-${id}`);
-        badge.innerText = `📺 ${adProgress[id]}/${REQUIRED_ADS}`;
+        if (badge) badge.innerText = `📺 ${adProgress[id]}/${REQUIRED_ADS}`;
 
         if (adProgress[id] >= REQUIRED_ADS) {
-          document.getElementById(`lock-${id}`).style.display = 'none';
-          document.getElementById(`unlock-${id}`).style.display = 'flex';
-          document.getElementById(`btn-${id}`).style.display = 'block';
+          const lockEl = document.getElementById(`lock-${id}`);
+          const unlockEl = document.getElementById(`unlock-${id}`);
+          const btnEl = document.getElementById(`btn-${id}`);
+          
+          if (lockEl) lockEl.style.display = 'none';
+          if (unlockEl) unlockEl.style.display = 'flex';
+          if (btnEl) btnEl.style.display = 'block';
         }
       }
     }
@@ -210,6 +265,9 @@
     function openLink(url) {
       tg.openLink(url);
     }
+
+    // Initial Load
+    renderVideos(videos);
   </script>
 </body>
 </html>
