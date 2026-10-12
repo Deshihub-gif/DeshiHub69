@@ -91,7 +91,7 @@
     <div class="ad-modal-box">
       <div class="ad-icon-anim">⏳</div>
       <h3 style="font-size: 16px; color: #fff;">Verifying Ad Impression...</h3>
-      <p style="font-size: 12px; color: #8e94a5;">Ad opened in browser. Please wait for timer verification to unlock progress.</p>
+      <p id="modalInstruction" style="font-size: 12px; color: #8e94a5;">Ad opened in browser. Please stay on the ad page for 10 seconds.</p>
       <div id="timerBadge" class="timer-badge">
         Please wait: <span id="seconds">10</span>s
       </div>
@@ -139,7 +139,7 @@
       { id: 28, title: "Terabox Special Cloud Video 28", views: "430", category: "Terabox", thumb: "https://picsum.photos/300/300?random=28", link: "https://terabox.com/s/sample8" },
       { id: 29, title: "Terabox Special Cloud Video 29", views: "615", category: "Terabox", thumb: "https://picsum.photos/300/300?random=29", link: "https://terabox.com/s/sample9" },
       { id: 30, title: "Terabox Special Cloud Video 30", views: "950", category: "Terabox", thumb: "https://picsum.photos/300/300?random=30", link: "https://terabox.com/s/sample10" },
-      { id: 31, title: "Bangladeshi Hizabi Girl Blojob showing Her boobs with boyfriend", views: "530", category: "Desi new Video", thumb: "https://i.postimg.cc/jjXm3Z9v/IMG-20261011-095343.jpg", link: "https://files.catbox.moe/kb9rmd.mp4" },
+      { id: 31, title: "Bangladesi Hizabi Girl Blojob showing Her boobs with boyfriend", views: "530", category: "Desi new Video", thumb: "https://i.postimg.cc/jjXm3Z9v/IMG-20261011-095343.jpg", link: "https://files.catbox.moe/kb9rmd.mp4" },
       { id: 32, title: "Desi Viral Hub Video 32", views: "710", category: "Desi new Video", thumb: "https://picsum.photos/300/300?random=32", link: "https://playmogo.com/d/sample32" },
       { id: 33, title: "Blogger Special Clip 33", views: "840", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=33", link: "https://t.me/Deshi_Hub69/21" },
       { id: 34, title: "Blogger Special Clip 34", views: "690", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=34", link: "https://t.me/Deshi_Hub69/22" },
@@ -154,7 +154,9 @@
     const adProgress = {};
     let activeAdVideoId = null;
     let timerInterval = null;
+    let seconds = 10;
     let currentCategory = 'All';
+    let isAdOpened = false;
 
     function renderVideos(filteredList) {
       const container = document.getElementById('grid-container');
@@ -190,23 +192,18 @@
 
     function setCategory(category, btnElement) {
       currentCategory = category;
-      
-      // Update active button style
       document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
       btnElement.classList.add('active');
-
       filterVideos();
     }
 
     function filterVideos() {
       const query = document.getElementById('searchInput').value.toLowerCase();
-      
       const filtered = videos.filter(item => {
         const matchesCategory = (currentCategory === 'All') || (item.category === currentCategory);
         const matchesSearch = item.title.toLowerCase().includes(query);
         return matchesCategory && matchesSearch;
       });
-
       renderVideos(filtered);
     }
 
@@ -214,34 +211,49 @@
       if (adProgress[id] >= REQUIRED_ADS) return;
 
       activeAdVideoId = id;
+      isAdOpened = true;
+      seconds = 10;
 
       // 1. Open Monetag Ad Cleanly in External Browser Tab
       tg.openLink(MONETAG_DIRECT_LINK);
 
       // 2. Show Modal Overlay inside Telegram WebApp with Timer
       document.getElementById('adModal').style.display = 'flex';
-
-      let seconds = 10;
       document.getElementById('seconds').innerText = seconds;
       document.getElementById('timerBadge').style.display = 'block';
       document.getElementById('claimBtn').style.display = 'none';
+      document.getElementById('modalInstruction').innerText = "Ad opened in browser. Please stay on the ad page for 10 seconds.";
 
       if (timerInterval) clearInterval(timerInterval);
 
       timerInterval = setInterval(() => {
-        seconds--;
-        document.getElementById('seconds').innerText = seconds;
+        // Only decrease seconds if user is actively focused on the WebApp (meaning they switched back from the ad)
+        if (!document.hidden && isAdOpened) {
+          seconds--;
+          document.getElementById('seconds').innerText = seconds;
 
-        if (seconds <= 0) {
-          clearInterval(timerInterval);
-          document.getElementById('timerBadge').style.display = 'none';
-          document.getElementById('claimBtn').style.display = 'block';
+          if (seconds <= 0) {
+            clearInterval(timerInterval);
+            document.getElementById('timerBadge').style.display = 'none';
+            document.getElementById('claimBtn').style.display = 'block';
+            document.getElementById('modalInstruction').innerText = "Verification complete! Click below to claim progress.";
+          }
         }
       }, 1000);
     }
 
+    // Tab Switch / Visibility Protection listener
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && isAdOpened) {
+        // User went back to browser ad page -> Timer continues smoothly
+      } else if (!document.hidden && isAdOpened) {
+        // User came back to Telegram app
+      }
+    });
+
     function closeAdModal() {
       document.getElementById('adModal').style.display = 'none';
+      isAdOpened = false;
 
       const id = activeAdVideoId;
       if (id && adProgress[id] < REQUIRED_ADS) {
