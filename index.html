@@ -56,48 +56,54 @@
     .ad-modal-box { width: 90%; max-width: 340px; background: #1a1c24; border-radius: 16px; padding: 25px 20px; border: 1px solid #2e3346; display: flex; flex-direction: column; align-items: center; gap: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     .ad-icon-anim { font-size: 40px; }
     .timer-badge { background: #222533; padding: 10px 20px; border-radius: 20px; font-size: 14px; color: #00ffcc; border: 1px solid #32374a; font-weight: 600; }
-    .claim-progress-btn { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; display: none; }
+    .claim-progress-btn { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; display: block; }
   </style>
 </head>
 <body>
 
   <!-- Top Header -->
-  <div class="header">
-    <div class="brand"><span>▶</span> VideoBot</div>
-    <div class="user-avatar"></div>
-  </div>
+  <main>
+    <div class="header">
+      <div class="brand"><span>▶</span> VideoBot</div>
+      <div class="user-avatar"></div>
+    </div>
 
-  <!-- Search Input -->
-  <div class="search-box">
-    <span>🔍</span>
-    <input type="text" id="searchInput" placeholder="Search videos..." onkeyup="filterVideos()">
-  </div>
+    <!-- Search Input -->
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Search videos..." onkeyup="filterVideos()">
+    </div>
 
-  <!-- Category Pills -->
-  <div class="categories" id="categoryContainer">
-    <button class="cat-btn active" onclick="setCategory('All', this)">🔥 All</button>
-    <button class="cat-btn" onclick="setCategory('Blogger Video', this)">Blogger Video</button>
-    <button class="cat-btn" onclick="setCategory('Desi new Video', this)">Desi new Video</button>
-    <button class="cat-btn" onclick="setCategory('Terabox', this)">Terabox</button>
-  </div>
+    <!-- Category Pills -->
+    <div class="categories" id="categoryContainer">
+      <button class="cat-btn active" onclick="setCategory('All', this)">🔥 All</button>
+      <button class="cat-btn" onclick="setCategory('Blogger Video', this)">Blogger Video</button>
+      <button class="cat-btn" onclick="setCategory('Desi new Video', this)">Desi new Video</button>
+      <button class="cat-btn" onclick="setCategory('Terabox', this)">Terabox</button>
+    </div>
 
-  <div class="section-label">🕒 Newest Videos</div>
+    <div class="section-label">🕒 Newest Videos</div>
 
-  <!-- 2-Column Grid Wrapper -->
-  <div class="video-grid" id="grid-container"></div>
+    <!-- 2-Column Grid Wrapper -->
+    <div class="video-grid" id="grid-container"></div>
+  </main>
 
   <!-- In-App Verification Modal -->
   <div id="adModal" class="ad-modal-overlay">
     <div class="ad-modal-box">
-      <div class="ad-icon-anim">⏳</div>
-      <h3 style="font-size: 16px; color: #fff;">Verifying Ad Impression...</h3>
-      <p id="modalInstruction" style="font-size: 12px; color: #8e94a5;">Ad opened in browser. Please stay on the ad page for 10 seconds.</p>
-      <div id="timerBadge" class="timer-badge">
-        Please wait: <span id="seconds">10</span>s
-      </div>
-      <button id="claimBtn" class="claim-progress-btn" onclick="closeAdModal()">
-        ✓ Claim Ad Progress
+      <div class="ad-icon-anim">📢</div>
+      <h3 style="font-size: 16px; color: #fff;">Mandatory Ad Verification</h3>
+      <p style="font-size: 12px; color: #8e94a5;">Please complete viewing the ad page for at least 10 seconds, then return here to verify and unlock progress.</p>
+      
+      <button id="openAdBtn" class="claim-progress-btn" style="background: #6c5ce7; margin-bottom: 5px;" onclick="openAdLink()">
+        🌐 Open Ad Link (Step 1)
       </button>
+
+      <button id="claimBtn" class="claim-progress-btn" onclick="verifyAndClaim()">
+        ✓ I have watched, Verify & Claim (Step 2)
+      </button>
+      
+      <button onclick="closeModalDirect()" style="background: transparent; border: none; color: #8e94a5; font-size: 12px; cursor: pointer; margin-top: 5px;">Cancel</button>
     </div>
   </div>
 
@@ -146,17 +152,15 @@
       { id: 35, title: "Terabox HD Video 35", views: "925", category: "Terabox", thumb: "https://picsum.photos/300/300?random=35", link: "https://terabox.com/s/sample35" },
       { id: 36, title: "Terabox HD Video 36", views: "480", category: "Terabox", thumb: "https://picsum.photos/300/300?random=36", link: "https://terabox.com/s/sample36" },
       { id: 37, title: "Desi Hot Romance 37", views: "770", category: "Desi new Video", thumb: "https://picsum.photos/300/300?random=37", link: "https://playmogo.com/d/sample37" },
-      { id: 38, title: "Desi Hot Romance 38", views: "880", category: "Desi new Video", thumb: "https://picsum.photos/300/300?random=38", link: "https://playmogo.com/d/sample38" },
+      { id: 38, title: "Desi Hot Romance 38", views: "880", category: "Desi new Video", thumb: "https://picsum.photos/300/300?random=38", link: "https://terabox.com/s/sample38" },
       { id: 39, title: "Blogger Exclusive 39", views: "630", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=39", link: "https://t.me/Deshi_Hub69/21" },
       { id: 40, title: "Blogger Exclusive 40", views: "995", category: "Blogger Video", thumb: "https://picsum.photos/300/300?random=40", link: "https://t.me/Deshi_Hub69/22" }
     ];
 
     const adProgress = {};
     let activeAdVideoId = null;
-    let timerInterval = null;
-    let seconds = 10;
     let currentCategory = 'All';
-    let isAdOpened = false;
+    let adClickTime = 0;
 
     function renderVideos(filteredList) {
       const container = document.getElementById('grid-container');
@@ -209,51 +213,26 @@
 
     function watchAd(id) {
       if (adProgress[id] >= REQUIRED_ADS) return;
-
       activeAdVideoId = id;
-      isAdOpened = true;
-      seconds = 10;
-
-      // 1. Open Monetag Ad Cleanly in External Browser Tab
-      tg.openLink(MONETAG_DIRECT_LINK);
-
-      // 2. Show Modal Overlay inside Telegram WebApp with Timer
       document.getElementById('adModal').style.display = 'flex';
-      document.getElementById('seconds').innerText = seconds;
-      document.getElementById('timerBadge').style.display = 'block';
-      document.getElementById('claimBtn').style.display = 'none';
-      document.getElementById('modalInstruction').innerText = "Ad opened in browser. Please stay on the ad page for 10 seconds.";
-
-      if (timerInterval) clearInterval(timerInterval);
-
-      timerInterval = setInterval(() => {
-        // Only decrease seconds if user is actively focused on the WebApp (meaning they switched back from the ad)
-        if (!document.hidden && isAdOpened) {
-          seconds--;
-          document.getElementById('seconds').innerText = seconds;
-
-          if (seconds <= 0) {
-            clearInterval(timerInterval);
-            document.getElementById('timerBadge').style.display = 'none';
-            document.getElementById('claimBtn').style.display = 'block';
-            document.getElementById('modalInstruction').innerText = "Verification complete! Click below to claim progress.";
-          }
-        }
-      }, 1000);
     }
 
-    // Tab Switch / Visibility Protection listener
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden && isAdOpened) {
-        // User went back to browser ad page -> Timer continues smoothly
-      } else if (!document.hidden && isAdOpened) {
-        // User came back to Telegram app
-      }
-    });
+    function openAdLink() {
+      adClickTime = Date.now();
+      tg.openLink(MONETAG_DIRECT_LINK);
+    }
 
-    function closeAdModal() {
+    function verifyAndClaim() {
+      const elapsedTime = Date.now() - adClickTime;
+      
+      // Check if user clicked the ad link first and waited at least 9-10 seconds
+      if (adClickTime === 0 || elapsedTime < 9000) {
+        alert("⚠️ Please click 'Open Ad Link' (Step 1) and stay on the ad page for at least 10 seconds before verifying!");
+        return;
+      }
+
       document.getElementById('adModal').style.display = 'none';
-      isAdOpened = false;
+      adClickTime = 0; // Reset
 
       const id = activeAdVideoId;
       if (id && adProgress[id] < REQUIRED_ADS) {
@@ -272,6 +251,11 @@
           if (btnEl) btnEl.style.display = 'block';
         }
       }
+    }
+
+    function closeModalDirect() {
+      document.getElementById('adModal').style.display = 'none';
+      adClickTime = 0;
     }
 
     function openLink(url) {
